@@ -8,7 +8,6 @@ int distance;
 void setup() {
     pinMode(trigPin, OUTPUT); // Sets the trigPin as an Output
     pinMode(echoPin, INPUT); // Sets the echoPin as an Input
-    //Serial.begin(9600); // Starts the serial communication
 }
 void loop() {
     // Clears the trigPin
@@ -24,5 +23,4 @@ void loop() {
     distance= duration*0.034/2;
     // Prints the distance on the Serial Monitor
     Particle.publish("Distance in cm" , String(distance), PRIVATE);
-    //Serial.println(distance);
 } 
