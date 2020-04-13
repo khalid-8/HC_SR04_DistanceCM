@@ -1,26 +1,29 @@
-//using Argon & HC_SR04 to send the Distance in cm
+// This #include statement was automatically added by the Particle IDE.
+#include <HC_SR04.h>
 
-const int trigPin = A0;
-const int echoPin = A1;
-// defines variables
-long duration;
-int distance;
-void setup() {
-    pinMode(trigPin, OUTPUT); // Sets the trigPin as an Output
-    pinMode(echoPin, INPUT); // Sets the echoPin as an Input
+// Sensor gateway using the Argon board. This contains the HC-SR04
+// Ultrasonic code and sends data to the other nodes to notify of a trip
+
+
+double cm = 0.0;
+//bool beam_status = false;
+
+int trigPin = A0;
+int echoPin = A1;
+
+HC_SR04 rangefinder = HC_SR04(trigPin, echoPin);
+
+void setup() 
+{
+    Spark.variable("cm", &cm, DOUBLE);
 }
-void loop() {
-    // Clears the trigPin
-    digitalWrite(trigPin, LOW);
+
+void loop() 
+{
+    cm = rangefinder.getDistanceCM();
+    
+    Particle.publish("Distance in cm" , String(cm), PRIVATE);
+    
+    
     delay(500);
-    // Sets the trigPin on HIGH state for 10 micro seconds
-    digitalWrite(trigPin, HIGH);
-    delay(500);
-    digitalWrite(trigPin, LOW);
-    // Reads the echoPin, returns the sound wave travel time in microseconds
-    duration = pulseIn(echoPin, HIGH);
-    // Calculating the distance
-    distance= duration*0.034/2;
-    // Prints the distance on the Serial Monitor
-    Particle.publish("Distance in cm" , String(distance), PRIVATE);
-} 
+}
